@@ -1,0 +1,59 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npx *)",
+      "Bash(git *)",
+      "Read(*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(rm -rf /)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "git diff --name-only HEAD 2>/dev/null | grep -E '^\\.env' && echo '🚨 WARNING: .envファイルが変更されています！中断してください。' || true"
+          },
+          {
+            "type": "command",
+            "command": "COUNT=$(awk '/^## 学習ログ/{found=1} found && /^- /{count++} END{print count+0}' CLAUDE.md 2>/dev/null); if [ \"$COUNT\" -ge 10 ]; then echo \"📚 学習ログが${COUNT}件に達しました。docs/lessons-learned.mdへ整理してCLAUDE.mdの学習ログをリセットしてください。\"; fi"
+          },
+          {
+            "type": "command",
+            "command": "CHANGES=$(git diff --name-only HEAD 2>/dev/null | wc -l | tr -d ' '); STAGED=$(git diff --cached --name-only 2>/dev/null | wc -l | tr -d ' '); if [ \"$CHANGES\" -gt 0 ] || [ \"$STAGED\" -gt 0 ]; then printf '\\n📋 作業完了チェックリスト:\\n1. 禁止ファイルに触っていないか？\\n2. DB変更がある場合マイグレーションは作成したか？\\n3. lint && typecheck && test を通過したか？\\n4. 機能変更なら /superpowers:differential-review を実行し0件になるまで修正せよ\\n5. 0件になったら「確認をお願いします。マージ指示をお待ちしています」と報告せよ\\n6. プロジェクト固有のミスがあればCLAUDE.md学習ログに追記せよ\\n'; fi"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash(git commit*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "git branch --show-current 2>/dev/null | grep -E '^(feature|fix|hotfix)/' || echo '🚨 WARNING: mainブランチへの直接コミットです！feature/fix/hotfixブランチを作成してください。'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npm run lint:fix --quiet 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}
