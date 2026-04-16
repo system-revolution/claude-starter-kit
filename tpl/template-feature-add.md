@@ -71,12 +71,9 @@ git commit -m "WIP: 実装開始前のセーフポイント" --allow-empty
 - 並列実装の前に必ずインターフェースを確定させること
 - 既存のコードパターン・命名規則に完全に合わせる
 - CLAUDE.mdの作業プロトコルに従う
-- TDDで進める。Superpowersのred-green-refactorサイクルに従う
 - ライブラリのAPIを使う箇所では `use context7` で最新Docを確認してから書く
 - DB変更がある場合はマイグレーションファイルを必ず作成する
-- 1機能実装 → lint + typecheck + test → git commit → 次の機能の順で進める
-- ビルドが通らない状態で次に進まない
-- テストが全て通過するまでマージしない
+- 1機能実装 → git commit → 次の機能の順で進める
 
 ### Step 3: ドキュメント更新（必須確認）
 
