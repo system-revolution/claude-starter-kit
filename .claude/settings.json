@@ -4,17 +4,50 @@
       "Bash(npm run *)",
       "Bash(npx *)",
       "Bash(git *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(find *)",
       "Read(*)"
     ],
     "deny": [
       "Read(./.env)",
       "Read(./.env.*)",
+      "Read(**/id_rsa)",
+      "Read(**/id_rsa.pub)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
       "Bash(curl *)",
       "Bash(wget *)",
-      "Bash(rm -rf /)"
+      "Bash(fetch *)",
+      "Bash(nc *)",
+      "Bash(rm -rf /)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf ~/*)",
+      "Bash(rm -rf $HOME*)",
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Bash(su *)",
+      "Bash(chmod 777 *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -fdx*)",
+      "Bash(:(){ :|:& };:)"
     ]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/check-plugins.sh 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
@@ -24,7 +57,7 @@
           },
           {
             "type": "command",
-            "command": "COUNT=$(awk '/^## 学習ログ/{found=1} found && /^- /{count++} END{print count+0}' CLAUDE.md 2>/dev/null); if [ \"$COUNT\" -ge 10 ]; then echo \"📚 学習ログが${COUNT}件に達しました。docs/lessons-learned.mdへ整理してCLAUDE.mdの学習ログをリセットしてください。\"; fi"
+            "command": "bash .claude/scripts/count-learnings.sh 2>/dev/null || true"
           },
           {
             "type": "command",
@@ -39,7 +72,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "git branch --show-current 2>/dev/null | grep -E '^(feature|fix|hotfix)/' || echo '🚨 WARNING: mainブランチへの直接コミットです！feature/fix/hotfixブランチを作成してください。'"
+            "command": "git branch --show-current 2>/dev/null | grep -E '^(feature|fix|hotfix|upgrade)/' || echo '🚨 WARNING: mainブランチへの直接コミットです！feature/fix/hotfix/upgradeブランチを作成してください。'"
           }
         ]
       }
