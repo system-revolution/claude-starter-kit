@@ -60,6 +60,25 @@ claude-starter-kit/
         └── update-base/                 ← 既存プロジェクトへの適用手順
 ```
 
+## 標準スタック
+
+推奨スタック: **Next.js + Supabase + TypeScript + Vercel**
+
+ただし本キットは**スタック可変**に対応する。案件要件に応じて以下のスタックにも対応可能:
+- AWS系 (ECS/Lambda/RDS/Cognito/S3 等)
+- Firebase系 (Firestore/Firebase Auth/Cloud Functions)
+- その他 (都度検討)
+
+スタックごとのルールは `.claude/rules/stack/` 配下の対応ファイルを利用する。
+
+## 対応OS
+
+- macOS (Intel/Apple Silicon)
+- Linux
+- Windows (WSL2経由のみ)
+
+Windowsネイティブ環境は未対応。Hooks内のシェルコマンドが動作しない。
+
 ## 使い方
 
 ### 1. 新規案件
@@ -73,12 +92,13 @@ tpl/template-new-project.md をコピー
     ↓
 Claude Code に全文を貼る
     ↓
-Step 0: プラグインチェック → 続行
-Step 1: 議事録分析 → 確認 → OK
-Step 2: 要件定義フロー（docs/requirements/ 生成）
-Step 3: 設計ドキュメント生成 → 確認 → OK
-Step 4: ルール・スキル・settings.json 生成
-Step 5: 実装
+Step 0: プラグインチェック
+Step 1: 議事録分析と要件整理
+Step 2: 要件統合と設計ドキュメント生成
+Step 3: ルール・スキル・設定生成
+Step 4: 実装
+Step 5: セキュリティチェック
+Step 6: 報告
     ↓
 開発開始
 ```
@@ -128,6 +148,13 @@ Claude Code に貼る → 原因調査 → 確認 → 修正
 - `stack/aws.md` — AWS を使うプロジェクトに適用
 - `stack/firebase.md` — Firebase を使うプロジェクトに適用
 - `project/` — 各プロジェクトが独自ルールを追加する場所
+
+## ドキュメント
+
+- [CHANGELOG.md](CHANGELOG.md) — バージョンごとの変更履歴
+- [CONTRIBUTING.md](CONTRIBUTING.md) — 改善フロー、SemVerルール
+- [docs/requirements/README.md](docs/requirements/README.md) — 要件定義フロー
+- [.claude/skills/update-base/SKILL.md](.claude/skills/update-base/SKILL.md) — 既存プロジェクトへの適用手順
 
 ## 整合性検証
 
